@@ -1,43 +1,21 @@
-const parse = require('pg-connection-string').parse;
-
-module.exports = ({ env }) => {
-
-  if(env('NODE_ENV') === 'production'){
-    const config = parse(process.env.DATABASE_URL);
-    return {
-      defaultConnection: 'default',
-      connections: {
-        default: {
-          connector: 'bookshelf',
-          settings: {
-            client: 'postgres',
-            host: config.host,
-            port: config.port,
-            database: config.database,
-            username: config.user,
-            password: config.password,
-          },
-          options: {
-            ssl: false,
-          },
+module.exports = ({ env }) => ({
+  defaultConnection: 'default',
+  connections: {
+    default: {
+      connector: 'bookshelf',
+      settings: {
+        client: 'postgres',
+        host: env('DATABASE_HOST', 'cluster0.k5cvz.mongodb.net'),
+        port: env.int('DATABASE_PORT', 27017),
+        database: env('DATABASE_NAME', 'strapi'),
+        username: env('DATABASE_USERNAME', 'admin'),
+        password: env('DATABASE_PASSWORD', 'Medmaker@2022'),
+        schema: env('DATABASE_SCHEMA', 'public'), // Not Required
+        ssl: {
+          rejectUnauthorized: env.bool('DATABASE_SSL_SELF', false), // For self-signed certificates
         },
       },
-    }
-  }
-  
-  return {
-    defaultConnection: 'default',
-    connections: {
-      default: {
-        connector: 'bookshelf',
-        settings: {
-          client: 'sqlite',
-          filename: env('DATABASE_FILENAME', '.tmp/data.db'),
-        },
-        options: {
-          useNullAsDefault: true,
-        },
-      },
+      options: {},
     },
-  }
-};
+  },
+});
