@@ -6,6 +6,7 @@ module.exports = ({ env }) => ({
       settings: {
         client: 'postgres',
         host: env('DATABASE_HOST', 'cluster0.k5cvz.mongodb.net'),
+        srv:env.bool('DATABASE_SRV',true),
         port: env.int('DATABASE_PORT', 27017),
         database: env('DATABASE_NAME', 'strapi'),
         username: env('DATABASE_USERNAME', 'admin'),
